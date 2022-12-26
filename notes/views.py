@@ -5,8 +5,11 @@ from django.views.generic import UpdateView, CreateView, DetailView,ListView
 from django.views.generic.edit  import DeleteView 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+
 from .models import Notes 
 from .forms import NotesForm
+
+
 
 class NotesDeleteView(DeleteView):
     model = Notes 
@@ -30,10 +33,11 @@ class NotesCreateView(LoginRequiredMixin ,CreateView):
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
-class NotesListView(ListView):
+class NotesListView(LoginRequiredMixin, ListView):
     model = Notes 
     context_object_name = 'notes'
     template_name = 'notes/notes_list.html'
+    login_url = "/admin"
 
     def get_queryset(self):
         return self.request.user.notes.all()
